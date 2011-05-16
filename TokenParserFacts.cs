@@ -146,6 +146,33 @@ namespace ClassLibrary3
         }
 
         [Fact]
+        public void ParseAttributeValueWithLt()
+        {
+            const string html = "<head x=<>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("<", attrValue.Value);
+        }
+        [Fact]
+        public void ParseAttributeValueWithGt()
+        {
+            const string html = "<head x=>>x";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.Text, attrValue.Type);
+            Assert.Equal(">x", attrValue.Value);
+        }
+
+        [Fact]
         public void ParseAttributeDoubleQuotedValue()
         {
             const string html = "<head x=\"y\">";

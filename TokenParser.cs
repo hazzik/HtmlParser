@@ -12,167 +12,41 @@ namespace ClassLibrary3
             var tokens = new List<Token>();
             foreach (char ch in html)
             {
+                bool handled;
                 if (ch == '<')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.Tag, TokenType.OpenTag);
-                            break;
-                        case ParseState.Tag:
-                            context.PreviousToken.Builder.Append(context.PreviousChar);
-                            break;
-                        case ParseState.AttibuteName:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleLt(tokens, context);
                 }
                 else if (ch == '>')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.Tag:
-                        case ParseState.AttibuteName:
-                        case ParseState.AttibuteValueBegin:
-                        case ParseState.AttibuteValue:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.Default, TokenType.Text);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleGt(tokens, context);
                 }
                 else if (ch == '/')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.AttibuteValue:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.Tag:
-                            context.CurrentToken.Type = TokenType.CloseTag;
-                            break;
-                        case ParseState.AttibuteName:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleSlash(tokens, context);
                 }
                 else if (ch == '=')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.AttibuteValueBegin:
-                            context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.Tag:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.AttibuteName:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.AttibuteValueBegin, TokenType.AttributeValue);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleEquals(tokens, context);
                 }
                 else if (ch == '"')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.Tag:
-                        case ParseState.AttibuteName:
-                        case ParseState.AttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.AttibuteValueBegin:
-                            context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
-                            break;
-                        case ParseState.DoubleQuotedAttibuteValue:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleDoubleQuote(tokens, context);
                 }
                 else if (ch == '\'')
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.Tag:
-                        case ParseState.AttibuteName:
-                        case ParseState.AttibuteValue:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.AttibuteValueBegin:
-                            context.SwitchState(ParseState.SingleQuotedAttibuteValue, TokenType.AttributeValue);
-                            break;
-                        case ParseState.SingleQuotedAttibuteValue:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleSingleQuote(tokens, context);
                 }
                 else if (char.IsWhiteSpace(ch))
                 {
-                    switch (context.State)
-                    {
-                        case ParseState.Default:
-                        case ParseState.Text:
-                        case ParseState.DoubleQuotedAttibuteValue:
-                        case ParseState.SingleQuotedAttibuteValue:
-                            context.CurrentToken.Builder.Append(ch);
-                            break;
-                        case ParseState.Tag:
-                        case ParseState.AttibuteName:
-                        case ParseState.AttibuteValue:
-                            tokens.Add(context.CurrentToken);
-                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
-                            break;
-                        case ParseState.AttibuteValueBegin:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    handled = HandleWhitespace(tokens, context);
                 }
                 else
                 {
-                    if (context.State == ParseState.AttibuteValueBegin)
-                    {
-                        context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
-                    }
+                    handled = HandleAny(context);
+                }
+                if (!handled)
+                {
                     context.CurrentToken.Builder.Append(ch);
                 }
                 context.PreviousChar = ch;
@@ -180,6 +54,118 @@ namespace ClassLibrary3
 
             tokens.Add(context.CurrentToken);
             return tokens.Where(x => x.IsNotEmpty());
+        }
+
+        private static bool HandleLt(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.Default || context.State == ParseState.Text)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.Tag, TokenType.OpenTag);
+                return true;
+            }
+            if (context.State == ParseState.Tag)
+            {
+                context.PreviousToken.Builder.Append(context.PreviousChar);
+                return true;
+            }
+            if (context.State == ParseState.AttibuteValueBegin)
+                context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            return false;
+        }
+
+        private static bool HandleGt(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.Tag || context.State == ParseState.AttibuteName || context.State == ParseState.AttibuteValueBegin || context.State == ParseState.AttibuteValue)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.Default, TokenType.Text);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool HandleSlash(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.Tag)
+            {
+                context.CurrentToken.Type = TokenType.CloseTag;
+                return true;
+            }
+            if (context.State == ParseState.AttibuteName)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                return true;
+            }
+            if (context.State == ParseState.AttibuteValueBegin)
+                context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            return false;
+        }
+
+        private static bool HandleEquals(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.AttibuteName)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.AttibuteValueBegin, TokenType.AttributeValue);
+                return true;
+            }
+            if (context.State == ParseState.AttibuteValueBegin)
+                context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            return false;
+        }
+
+        private static bool HandleAny(Context context)
+        {
+            if (context.State == ParseState.AttibuteValueBegin)
+                context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            return false;
+        }
+
+        private static bool HandleDoubleQuote(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.AttibuteValueBegin)
+            {
+                context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
+                return true;
+            }
+            if (context.State == ParseState.DoubleQuotedAttibuteValue)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool HandleSingleQuote(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.AttibuteValueBegin)
+            {
+                context.SwitchState(ParseState.SingleQuotedAttibuteValue, TokenType.AttributeValue);
+                return true;
+            }
+            if (context.State == ParseState.SingleQuotedAttibuteValue)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool HandleWhitespace(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.Tag ||
+                context.State == ParseState.AttibuteName ||
+                context.State == ParseState.AttibuteValue)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                return true;
+            }
+            return context.State == ParseState.AttibuteValueBegin;
         }
     }
 }
