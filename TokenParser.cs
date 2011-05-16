@@ -38,6 +38,8 @@ namespace ClassLibrary3
                             break;
                         case ParseState.Tag:
                         case ParseState.AttibuteName:
+                        case ParseState.AttibuteValueBegin:
+                        case ParseState.AttibuteValue:
                             tokens.Add(context.CurrentToken);
                             context.SwitchState(ParseState.Default, TokenType.Text);
                             break;
@@ -60,6 +62,23 @@ namespace ClassLibrary3
                             throw new ArgumentOutOfRangeException();
                     }
                 }
+                else if (ch == '=')
+                {
+                    switch (context.State)
+                    {
+                        case ParseState.Default:
+                        case ParseState.Text:
+                        case ParseState.Tag:
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
+                        case ParseState.AttibuteName:
+                            tokens.Add(context.CurrentToken);
+                            context.SwitchState(ParseState.AttibuteValueBegin, TokenType.AttributeValue);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 else if (char.IsWhiteSpace(ch))
                 {
                     switch (context.State)
@@ -70,8 +89,11 @@ namespace ClassLibrary3
                             break;
                         case ParseState.Tag:
                         case ParseState.AttibuteName:
+                        case ParseState.AttibuteValue:
                             tokens.Add(context.CurrentToken);
                             context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                            break;
+                        case ParseState.AttibuteValueBegin:
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -79,6 +101,10 @@ namespace ClassLibrary3
                 }
                 else
                 {
+                    if (context.State == ParseState.AttibuteValueBegin)
+                    {
+                        context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+                    }
                     context.CurrentToken.Builder.Append(ch);
                 }
                 context.PreviousChar = ch;
