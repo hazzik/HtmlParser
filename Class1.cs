@@ -35,6 +35,7 @@ namespace ClassLibrary3
             Assert.Equal("head", first.Name);
             Assert.Equal("body", last.Name);
         }
+
         [Fact]
         public void ParseTextAndTag()
         {
@@ -44,6 +45,17 @@ namespace ClassLibrary3
             HtmlNode last = nodes.Last();
             Assert.Equal("<", first.Name);
             Assert.Equal("head", last.Name);
+        }
+
+        [Fact]
+        public void ParseNestedTags()
+        {
+            const string html = "<head><title></title></head>";
+            IEnumerable<HtmlNode> nodes = Parse(html);
+            HtmlNode first = nodes.First();
+            HtmlNode last = first.Nodes.Single();
+            Assert.Equal("head", first.Name);
+            Assert.Equal("title", last.Name);
         }
 
         private static IEnumerable<HtmlNode> Parse(string html)
@@ -119,31 +131,38 @@ namespace ClassLibrary3
 
         private static IEnumerable<HtmlNode> BuildTree(IEnumerable<Token> tokens)
         {
+            var parent = new HtmlNode();
             var tree = new List<HtmlNode>();
-            var currentNode = new HtmlNode();
+            var currentNode = parent;
+            var stack = new Stack<HtmlNode>();
             foreach (Token token in tokens)
             {
                 switch (token.Type)
                 {
                     case TokenType.OpenTag:
-                        currentNode.Name = token.Builder.ToString();
+                        var node = new HtmlNode
+                                           {
+                                               Name = token.Builder.ToString()
+                                           };
+                        currentNode.AddChild(node);
+                        stack.Push(currentNode);
+                        currentNode = node;
                         break;
                     case TokenType.CloseTag:
-                        tree.Add(currentNode);
-                        currentNode = new HtmlNode();
+                        currentNode = stack.Pop();
                         break;
                     case TokenType.AttributeName:
                         break;
                     case TokenType.AttributeValue:
                         break;
                     case TokenType.Text:
-                        tree.Add(new HtmlNode {Name = token.Builder.ToString()});
+                        currentNode.AddChild(new HtmlNode {Name = token.Builder.ToString()});
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            return tree;
+            return parent.Nodes;
         }
 
         #region Nested type: Context
@@ -179,7 +198,19 @@ namespace ClassLibrary3
 
         private class HtmlNode
         {
+            private readonly ICollection<HtmlNode> nodes = new List<HtmlNode>();
+            
             public string Name { get; set; }
+
+            public IEnumerable<HtmlNode> Nodes
+            {
+                get { return nodes; }
+            }
+
+            public void AddChild(HtmlNode node)
+            {
+                nodes.Add(node);
+            }
         }
 
         #endregion
