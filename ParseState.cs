@@ -10,6 +10,7 @@ namespace ClassLibrary3
         AttibuteName,
         AttibuteValueBegin,
         AttibuteValue,
-        DoubleQuotedAttibuteValue
+        DoubleQuotedAttibuteValue,
+        SingleQuotedAttibuteValue
     }
 }

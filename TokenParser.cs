@@ -24,6 +24,10 @@ namespace ClassLibrary3
                         case ParseState.Tag:
                             context.PreviousToken.Builder.Append(context.PreviousChar);
                             break;
+                        case ParseState.DoubleQuotedAttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -34,6 +38,8 @@ namespace ClassLibrary3
                     {
                         case ParseState.Default:
                         case ParseState.Text:
+                        case ParseState.DoubleQuotedAttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.Tag:
@@ -53,6 +59,9 @@ namespace ClassLibrary3
                     {
                         case ParseState.Default:
                         case ParseState.Text:
+                        case ParseState.AttibuteValue:
+                        case ParseState.DoubleQuotedAttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.Tag:
@@ -69,6 +78,8 @@ namespace ClassLibrary3
                         case ParseState.Default:
                         case ParseState.Text:
                         case ParseState.Tag:
+                        case ParseState.DoubleQuotedAttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.AttibuteName:
@@ -88,12 +99,36 @@ namespace ClassLibrary3
                         case ParseState.Tag:
                         case ParseState.AttibuteName:
                         case ParseState.AttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.AttibuteValueBegin:
                             context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
                             break;
                         case ParseState.DoubleQuotedAttibuteValue:
+                            tokens.Add(context.CurrentToken);
+                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                else if (ch == '\'')
+                {
+                    switch (context.State)
+                    {
+                        case ParseState.Default:
+                        case ParseState.Text:
+                        case ParseState.Tag:
+                        case ParseState.AttibuteName:
+                        case ParseState.AttibuteValue:
+                        case ParseState.DoubleQuotedAttibuteValue:
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
+                        case ParseState.AttibuteValueBegin:
+                            context.SwitchState(ParseState.SingleQuotedAttibuteValue, TokenType.AttributeValue);
+                            break;
+                        case ParseState.SingleQuotedAttibuteValue:
                             tokens.Add(context.CurrentToken);
                             context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                             break;

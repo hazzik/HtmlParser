@@ -48,6 +48,26 @@ namespace ClassLibrary3
         }
 
         [Fact]
+        public void ParseTextWithSingleQuote()
+        {
+            const string html = "'";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Token first = tokens.First();
+            Assert.Equal(first.Type, TokenType.Text);
+            Assert.Equal("'", first.Value);
+        }
+
+        [Fact]
+        public void ParseTextWithDoubleQuote()
+        {
+            const string html = "\"";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Token first = tokens.First();
+            Assert.Equal(first.Type, TokenType.Text);
+            Assert.Equal("\"", first.Value);
+        }
+
+        [Fact]
         public void ParseAttributeName()
         {
             const string html = "<head x>";
@@ -112,6 +132,20 @@ namespace ClassLibrary3
         }
 
         [Fact]
+        public void ParseAttributeValueWithSlashInside()
+        {
+            const string html = "<head x=y/z>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y/z", attrValue.Value);
+        }
+
+        [Fact]
         public void ParseAttributeDoubleQuotedValue()
         {
             const string html = "<head x=\"y\">";
@@ -137,6 +171,160 @@ namespace ClassLibrary3
             Token attrValue = tokens[2];
             Assert.Equal(TokenType.AttributeValue, attrValue.Type);
             Assert.Equal("y z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeDoubleQuotedValueWithSingleQuoteInside()
+        {
+            const string html = "<head x=\"y'z\">";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y'z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeDoubleQuotedValueWithEqualsInside()
+        {
+            const string html = "<head x=\"y=z\">";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y=z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeDoubleQuotedValueWithLtInside()
+        {
+            const string html = "<head x=\"y<z\">";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y<z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeDoubleQuotedValueWithGtInside()
+        {
+            const string html = "<head x=\"y>z\">";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y>z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeDoubleQuotedValueWithSlashInside()
+        {
+            const string html = "<head x=\"y/z\">";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y/z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeSingleQuotedValue()
+        {
+            const string html = "<head x='y'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y", attrValue.Value);
+        }
+        
+        [Fact]
+        public void ParseAttributeSingleQuotedValueWithDoublequoteInside()
+        {
+            const string html = "<head x='y\"z'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y\"z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeSingleQuotedValueWithEqualsInside()
+        {
+            const string html = "<head x='y=z'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y=z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeSingleQuotedValueWithLtInside()
+        {
+            const string html = "<head x='y<z'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y<z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeSingleQuotedValueWithGtInside()
+        {
+            const string html = "<head x='y>z'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y>z", attrValue.Value);
+        }
+
+        [Fact]
+        public void ParseAttributeSingleQuotedValueWithSlashInside()
+        {
+            const string html = "<head x='y/z'>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+            Assert.Equal("head", tokens.First().Value);
+            Token attrName = tokens[1];
+            Assert.Equal(TokenType.AttributeName, attrName.Type);
+            Assert.Equal("x", attrName.Value);
+            Token attrValue = tokens[2];
+            Assert.Equal(TokenType.AttributeValue, attrValue.Type);
+            Assert.Equal("y/z", attrValue.Value);
         }
 
         [Fact]
