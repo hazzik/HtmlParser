@@ -9,6 +9,7 @@ namespace ClassLibrary3
         Tag,
         AttibuteName,
         AttibuteValueBegin,
-        AttibuteValue
+        AttibuteValue,
+        DoubleQuotedAttibuteValue
     }
 }

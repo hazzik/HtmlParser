@@ -79,12 +79,35 @@ namespace ClassLibrary3
                             throw new ArgumentOutOfRangeException();
                     }
                 }
+                else if (ch == '"')
+                {
+                    switch (context.State)
+                    {
+                        case ParseState.Default:
+                        case ParseState.Text:
+                        case ParseState.Tag:
+                        case ParseState.AttibuteName:
+                        case ParseState.AttibuteValue:
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
+                        case ParseState.AttibuteValueBegin:
+                            context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
+                            break;
+                        case ParseState.DoubleQuotedAttibuteValue:
+                            tokens.Add(context.CurrentToken);
+                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 else if (char.IsWhiteSpace(ch))
                 {
                     switch (context.State)
                     {
                         case ParseState.Default:
                         case ParseState.Text:
+                        case ParseState.DoubleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.Tag:
