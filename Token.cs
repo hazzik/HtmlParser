@@ -1,0 +1,29 @@
+using System;
+using System.Diagnostics;
+using System.Text;
+
+namespace ClassLibrary3
+{
+    [DebuggerDisplay("{Builder}")]
+    internal class Token
+    {
+        private readonly StringBuilder builder = new StringBuilder();
+
+        public Token(TokenType type)
+        {
+            Type = type;
+        }
+
+        public TokenType Type { get; set; }
+
+        public StringBuilder Builder
+        {
+            get { return builder; }
+        }
+
+        public bool IsNotEmpty()
+        {
+            return Builder.Length > 0;
+        }
+    }
+}
