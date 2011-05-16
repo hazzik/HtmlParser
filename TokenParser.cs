@@ -24,6 +24,7 @@ namespace ClassLibrary3
                         case ParseState.Tag:
                             context.PreviousToken.Builder.Append(context.PreviousChar);
                             break;
+                        case ParseState.AttibuteName:
                         case ParseState.DoubleQuotedAttibuteValue:
                         case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
@@ -67,6 +68,10 @@ namespace ClassLibrary3
                         case ParseState.Tag:
                             context.CurrentToken.Type = TokenType.CloseTag;
                             break;
+                        case ParseState.AttibuteName:
+                            tokens.Add(context.CurrentToken);
+                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -75,6 +80,10 @@ namespace ClassLibrary3
                 {
                     switch (context.State)
                     {
+                        case ParseState.AttibuteValueBegin:
+                            context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
                         case ParseState.Default:
                         case ParseState.Text:
                         case ParseState.Tag:
@@ -143,6 +152,7 @@ namespace ClassLibrary3
                         case ParseState.Default:
                         case ParseState.Text:
                         case ParseState.DoubleQuotedAttibuteValue:
+                        case ParseState.SingleQuotedAttibuteValue:
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.Tag:

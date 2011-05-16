@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ClassLibrary3
 {
+    [DebuggerDisplay("{Name}")]
     internal class HtmlNode
     {
         private readonly ICollection<HtmlAttribute> attributes = new List<HtmlAttribute>();
