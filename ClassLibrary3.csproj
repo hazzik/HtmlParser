@@ -43,7 +43,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="HtmlAttribute.cs" />
+    <Compile Include="HtmlParserTests.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="HtmlNode.cs" />
     <Compile Include="HtmlParser.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="TokenParser.cs" />
     <Compile Include="TokenType.cs" />
     <Compile Include="TreeBuilder.cs" />
+    <Compile Include="TreeBuilderFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

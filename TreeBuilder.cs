@@ -11,6 +11,7 @@ namespace ClassLibrary3
             var tree = new List<HtmlNode>();
             HtmlNode currentNode = parent;
             var stack = new Stack<HtmlNode>();
+            HtmlAttribute currentAttribute = null;
             foreach (Token token in tokens)
             {
                 switch (token.Type)
@@ -18,7 +19,7 @@ namespace ClassLibrary3
                     case TokenType.OpenTag:
                         var node = new HtmlNode
                                        {
-                                           Name = token.Builder.ToString()
+                                           Name = token.Value
                                        };
                         currentNode.AddChild(node);
                         stack.Push(currentNode);
@@ -28,11 +29,17 @@ namespace ClassLibrary3
                         currentNode = stack.Pop();
                         break;
                     case TokenType.AttributeName:
+                        currentAttribute = new HtmlAttribute
+                                               {
+                                                   Name = token.Value
+                                               };
+                        currentNode.AddAttribute(currentAttribute);
                         break;
                     case TokenType.AttributeValue:
+                        currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
-                        currentNode.AddChild(new HtmlNode {Name = token.Builder.ToString()});
+                        currentNode.AddChild(new HtmlNode {Name = token.Value});
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

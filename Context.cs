@@ -13,7 +13,7 @@ namespace ClassLibrary3
 
         public ParseState State { get; private set; }
 
-        public Token PreviousToken { get; private set; }
+        public Token PreviousToken;
 
         public char PreviousChar { get; set; }
 

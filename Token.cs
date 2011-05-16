@@ -25,5 +25,10 @@ namespace ClassLibrary3
         {
             return Builder.Length > 0;
         }
+
+        public string Value
+        {
+            get { return Builder.ToString(); }
+        }
     }
 }

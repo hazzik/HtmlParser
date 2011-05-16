@@ -45,6 +45,17 @@ namespace ClassLibrary3
             Assert.Equal("head", last.Name);
         }
 
+        [Fact(Skip = "not for now")]
+        public void ParseTextAndTag2()
+        {
+            const string html = "<hea<head></head>";
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html);
+            HtmlNode first = nodes.First();
+            HtmlNode last = nodes.Last();
+            Assert.Equal("<hea", first.Name);
+            Assert.Equal("head", last.Name);
+        }
+
         [Fact]
         public void ParseNestedTags()
         {
@@ -61,9 +72,9 @@ namespace ClassLibrary3
             const string html = "<head x></head>";
             IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html);
             HtmlNode first = nodes.First();
-            HtmlNode last = first.Nodes.Single();
             Assert.Equal("head", first.Name);
-            Assert.Equal("title", last.Name);
+            var last = first.Attributes.Single();
+            Assert.Equal("x", last.Name);
         }
     }
 }
