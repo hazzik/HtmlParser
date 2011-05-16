@@ -7,7 +7,7 @@ namespace ClassLibrary3
     {
         public static IEnumerable<HtmlNode> Parse(string html)
         {
-            IEnumerable<Token> tokens = TokenParser.ParseTokens(html);
+            IEnumerable<Token> tokens = TokenParser.Parse(html);
             return TreeBuilder.BuildTree(tokens);
         }
     }

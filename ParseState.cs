@@ -7,5 +7,6 @@ namespace ClassLibrary3
         Default,
         Text,
         Tag,
+        AttibuteName
     }
 }

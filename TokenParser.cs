@@ -6,7 +6,7 @@ namespace ClassLibrary3
 {
     internal class TokenParser
     {
-        public static IEnumerable<Token> ParseTokens(string html)
+        public static IEnumerable<Token> Parse(string html)
         {
             var context = new Context();
             var tokens = new List<Token>();
@@ -37,8 +37,8 @@ namespace ClassLibrary3
                             context.CurrentToken.Builder.Append(ch);
                             break;
                         case ParseState.Tag:
-                            if (context.CurrentToken.IsNotEmpty())
-                                tokens.Add(context.CurrentToken);
+                        case ParseState.AttibuteName:
+                            tokens.Add(context.CurrentToken);
                             context.SwitchState(ParseState.Default, TokenType.Text);
                             break;
                         default:
@@ -55,6 +55,23 @@ namespace ClassLibrary3
                             break;
                         case ParseState.Tag:
                             context.CurrentToken.Type = TokenType.CloseTag;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                else if (char.IsWhiteSpace(ch))
+                {
+                    switch (context.State)
+                    {
+                        case ParseState.Default:
+                        case ParseState.Text:
+                            context.CurrentToken.Builder.Append(ch);
+                            break;
+                        case ParseState.Tag:
+                        case ParseState.AttibuteName:
+                            tokens.Add(context.CurrentToken);
+                            context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
