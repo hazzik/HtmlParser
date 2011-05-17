@@ -79,5 +79,21 @@ namespace HtmlParser.Tests
             var previousSibling = a.PreviousSibling;
             Assert.Equal("br", previousSibling.Name);
         }
+
+        [Fact]
+        public void ParentNodeOfRootElementIsNull()
+        {
+            var doc = new HtmlDocumentNode();
+            Assert.Null(doc.ParentNode);
+        }
+
+        [Fact]
+        public void ParentNodeOfNotRootElementIsNotNull()
+        {
+            var doc = new HtmlDocumentNode();
+            var a = new HtmlElementNode("a");
+            doc.AppendChild(new HtmlElementNode("br"));
+            Assert.Equal(doc, a.ParentNode);
+        }
     }
 }
