@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace HtmlParser
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal class TokenParser
     {
         public static IEnumerable<Token> Parse(string html)
@@ -14,11 +13,11 @@ namespace HtmlParser
             {
                 if (HandleCharacter(tokens, context, ch) == false)
                 {
-                    context.CurrentToken.Builder.Append(ch);
+                    context.TokenBuilder.Append(ch);
                 }
             }
 
-            tokens.Add(context.CurrentToken);
+            tokens.Add(context.TokenBuilder.Create());
             return tokens.Where(x => x.IsNotEmpty());
         }
 
@@ -48,7 +47,7 @@ namespace HtmlParser
             {
                 return HandleSingleQuote(tokens, context);
             }
-            if(ch == '-')
+            if (ch == '-')
             {
                 return HandleMinus(tokens, context);
             }
@@ -78,7 +77,7 @@ namespace HtmlParser
             }
             if (context.State == ParseState.WaitForSecondOpenMinus)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.Comment, TokenType.Comment);
                 return true;
             }
@@ -89,7 +88,7 @@ namespace HtmlParser
         {
             if (context.State == ParseState.WhaitForTagOrComment)
             {
-                context.CurrentToken.Builder.Append('<');
+                context.TokenBuilder.Append('<');
                 return true;
             }
             if (context.State == ParseState.Text)
@@ -99,7 +98,7 @@ namespace HtmlParser
             }
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
             }
             return false;
@@ -110,10 +109,10 @@ namespace HtmlParser
             if (context.State == ParseState.Tag ||
                 context.State == ParseState.AttibuteName ||
                 context.State == ParseState.AttibuteValueBegin ||
-                context.State == ParseState.AttibuteValue || 
+                context.State == ParseState.AttibuteValue ||
                 context.State == ParseState.WaitForGt)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.Text, TokenType.Text);
                 return true;
             }
@@ -124,19 +123,19 @@ namespace HtmlParser
         {
             if (context.State == ParseState.WhaitForTagOrComment)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.Tag, TokenType.CloseTag);
                 return true;
             }
             if (context.State == ParseState.AttibuteName)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                 return true;
             }
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
             }
             return false;
@@ -151,7 +150,7 @@ namespace HtmlParser
             }
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
             }
             return false;
@@ -161,28 +160,28 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
             }
             if (context.State == ParseState.WhaitForTagOrComment)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.Tag, TokenType.OpenTag);
             }
-            if(context.State == ParseState.WaitForSecondOpenMinus)
+            if (context.State == ParseState.WaitForSecondOpenMinus)
             {
                 context.SetState(ParseState.Text);
-                context.CurrentToken.Builder.Append("<-");
+                context.TokenBuilder.Append("<-");
             }
-            if(context.State == ParseState.WaitForSecondCloseMinus)
+            if (context.State == ParseState.WaitForSecondCloseMinus)
             {
                 context.SetState(ParseState.Comment);
-                context.CurrentToken.Builder.Append("-");
+                context.TokenBuilder.Append("-");
             }
             if (context.State == ParseState.WaitForGt)
             {
                 context.SetState(ParseState.Comment);
-                context.CurrentToken.Builder.Append("--");
+                context.TokenBuilder.Append("--");
             }
             return false;
         }
@@ -191,13 +190,13 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
                 return true;
             }
             if (context.State == ParseState.DoubleQuotedAttibuteValue)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                 return true;
             }
@@ -208,13 +207,13 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
-                tokens.Add(context.CurrentToken); 
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.SingleQuotedAttibuteValue, TokenType.AttributeValue);
                 return true;
             }
             if (context.State == ParseState.SingleQuotedAttibuteValue)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                 return true;
             }
@@ -226,23 +225,23 @@ namespace HtmlParser
             if (context.State == ParseState.WaitForSecondOpenMinus)
             {
                 context.SetState(ParseState.Text);
-                context.CurrentToken.Builder.Append("<-");
+                context.TokenBuilder.Append("<-");
             }
             if (context.State == ParseState.WaitForSecondCloseMinus)
             {
                 context.SetState(ParseState.Comment);
-                context.CurrentToken.Builder.Append("-");
+                context.TokenBuilder.Append("-");
             }
             if (context.State == ParseState.WaitForGt)
             {
                 context.SetState(ParseState.Comment);
-                context.CurrentToken.Builder.Append("--");
+                context.TokenBuilder.Append("--");
             }
             if (context.State == ParseState.Tag ||
                 context.State == ParseState.AttibuteName ||
                 context.State == ParseState.AttibuteValue)
             {
-                tokens.Add(context.CurrentToken);
+                tokens.Add(context.TokenBuilder.Create());
                 context.SwitchState(ParseState.AttibuteName, TokenType.AttributeName);
                 return true;
             }

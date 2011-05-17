@@ -49,6 +49,7 @@
     <Compile Include="ParseState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="TokenBuilder.cs" />
     <Compile Include="TokenParser.cs" />
     <Compile Include="TokenType.cs" />
     <Compile Include="TreeBuilder.cs" />

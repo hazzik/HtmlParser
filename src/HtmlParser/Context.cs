@@ -5,17 +5,17 @@ namespace HtmlParser
         public Context()
         {
             State = ParseState.Text;
-            CurrentToken = new Token(TokenType.Text);
+            TokenBuilder = new TokenBuilder(TokenType.Text);
         }
 
         public ParseState State { get; private set; }
 
-        public Token CurrentToken { get; private set; }
+        public TokenBuilder TokenBuilder { get; private set; }
 
         public void SwitchState(ParseState state, TokenType tokenType)
         {
             SetState(state);
-            CurrentToken = new Token(tokenType);
+            TokenBuilder = new TokenBuilder(tokenType);
         }
 
         public void SetState(ParseState state)

@@ -9,8 +9,7 @@
         [Fact]
         public void Comment()
         {
-            var comment = new Token(TokenType.Comment);
-            comment.Builder.Append("head");
+            var comment = new Token(TokenType.Comment, "head");
 
             var tokens = new[]
                              {
@@ -25,14 +24,11 @@
         [Fact]
         public void AttributeName()
         {
-            var openTag = new Token(TokenType.OpenTag);
-            openTag.Builder.Append("head");
+            var openTag = new Token(TokenType.OpenTag, "head");
 
-            var attributeName = new Token(TokenType.AttributeName);
-            attributeName.Builder.Append("xxx");
+            var attributeName = new Token(TokenType.AttributeName, "xxx");
 
-            var closeTag = new Token(TokenType.CloseTag);
-            closeTag.Builder.Append("head");
+            var closeTag = new Token(TokenType.CloseTag, "head");
 
             var tokens = new[]
                              {
@@ -49,17 +45,13 @@
         [Fact]
         public void AttributeValue()
         {
-            var openTag = new Token(TokenType.OpenTag);
-            openTag.Builder.Append("head");
+            var openTag = new Token(TokenType.OpenTag, "head");
 
-            var attributeName = new Token(TokenType.AttributeName);
-            attributeName.Builder.Append("xxx");
+            var attributeName = new Token(TokenType.AttributeName, "xxx");
 
-            var attributeValue = new Token(TokenType.AttributeValue);
-            attributeValue.Builder.Append("yyy");
+            var attributeValue = new Token(TokenType.AttributeValue, "yyy");
 
-            var closeTag = new Token(TokenType.CloseTag);
-            closeTag.Builder.Append("head");
+            var closeTag = new Token(TokenType.CloseTag, "head");
 
             var tokens = new[]
                              {
@@ -78,11 +70,9 @@
         [Fact]
         public void SelfClosingTagBr()
         {
-            var br = new Token(TokenType.OpenTag);
-            br.Builder.Append("br");
+            var br = new Token(TokenType.OpenTag, "br");
 
-            var body = new Token(TokenType.OpenTag);
-            body.Builder.Append("body");
+            var body = new Token(TokenType.OpenTag, "body");
 
             var tokens = new[]
                              {
@@ -97,14 +87,11 @@
         [Fact]
         public void SelfClosingTagBrInBody()
         {
-            var br = new Token(TokenType.OpenTag);
-            br.Builder.Append("br");
+            var br = new Token(TokenType.OpenTag, "br");
 
-            var body = new Token(TokenType.OpenTag);
-            body.Builder.Append("body");
+            var body = new Token(TokenType.OpenTag, "body");
 
-            var innerBr = new Token(TokenType.OpenTag);
-            innerBr.Builder.Append("br");
+            var innerBr = new Token(TokenType.OpenTag, "br");
 
             var tokens = new[]
                              {
@@ -120,12 +107,9 @@
         [Fact]
         public void ThreeSelfClosingTagBr()
         {
-            var br1 = new Token(TokenType.OpenTag);
-            br1.Builder.Append("br");
-            var br2 = new Token(TokenType.OpenTag);
-            br2.Builder.Append("br");
-            var br3 = new Token(TokenType.OpenTag);
-            br3.Builder.Append("br");
+            var br1 = new Token(TokenType.OpenTag, "br");
+            var br2 = new Token(TokenType.OpenTag, "br");
+            var br3 = new Token(TokenType.OpenTag, "br");
 
             var tokens = new[]
                              {

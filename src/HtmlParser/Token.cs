@@ -1,34 +1,23 @@
-using System;
-using System.Diagnostics;
-using System.Text;
-
-namespace HtmlParser
+﻿namespace HtmlParser
 {
-    [DebuggerDisplay("{Builder}")]
+    using System.Diagnostics;
+
+    [DebuggerDisplay("{Type, Value}")]
     internal class Token
     {
-        private readonly StringBuilder builder = new StringBuilder();
-
-        public Token(TokenType type)
+        public Token(TokenType type, string value)
         {
             Type = type;
+            Value = value;
         }
 
-        public TokenType Type { get; set; }
+        public TokenType Type { get; private set; }
 
-        public StringBuilder Builder
-        {
-            get { return builder; }
-        }
+        public string Value { get; private set; }
 
         public bool IsNotEmpty()
         {
-            return Builder.Length > 0;
-        }
-
-        public string Value
-        {
-            get { return Builder.ToString(); }
+            return string.IsNullOrEmpty(Value) == false;
         }
     }
 }
