@@ -159,6 +159,21 @@ namespace HtmlParser
                 tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.Tag, TokenType.OpenTag);
             }
+            if(context.State == ParseState.WaitForSecondOpenMinus)
+            {
+                context.SetState(ParseState.Text);
+                context.CurrentToken.Builder.Append("<-");
+            }
+            if(context.State == ParseState.WaitForSecondCloseMinus)
+            {
+                context.SetState(ParseState.Comment);
+                context.CurrentToken.Builder.Append("-");
+            }
+            if (context.State == ParseState.WaitForGt)
+            {
+                context.SetState(ParseState.Comment);
+                context.CurrentToken.Builder.Append("--");
+            }
             return false;
         }
 
@@ -196,6 +211,21 @@ namespace HtmlParser
 
         private static bool HandleWhitespace(ICollection<Token> tokens, Context context)
         {
+            if (context.State == ParseState.WaitForSecondOpenMinus)
+            {
+                context.SetState(ParseState.Text);
+                context.CurrentToken.Builder.Append("<-");
+            }
+            if (context.State == ParseState.WaitForSecondCloseMinus)
+            {
+                context.SetState(ParseState.Comment);
+                context.CurrentToken.Builder.Append("-");
+            }
+            if (context.State == ParseState.WaitForGt)
+            {
+                context.SetState(ParseState.Comment);
+                context.CurrentToken.Builder.Append("--");
+            }
             if (context.State == ParseState.Tag ||
                 context.State == ParseState.AttibuteName ||
                 context.State == ParseState.AttibuteValue)

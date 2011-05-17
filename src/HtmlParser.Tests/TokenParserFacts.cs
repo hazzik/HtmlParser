@@ -384,5 +384,38 @@ namespace HtmlParser.Tests
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x=y z", token.Value);
         }
+
+        [Fact]
+        public void DoesNotParseAsCommentLtWithSingleMinus()
+        {
+            const string html = "<- head x=y z-->";
+
+            var tokens = TokenParser.Parse(html);
+            var token = tokens.First();
+            Assert.Equal(TokenType.Text, token.Type);
+            Assert.Equal("<- head x=y z-->", token.Value);
+        }
+        
+        [Fact]
+        public void DoesParseCommentWithMinusInside()
+        {
+            const string html = "<--head x-y- z-->";
+
+            var tokens = TokenParser.Parse(html);
+            var token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("head x-y- z", token.Value);
+        }
+        
+        [Fact]
+        public void DoesParseCommentWithDoubleMinusInside()
+        {
+            const string html = "<--head x--y-- z-->";
+
+            var tokens = TokenParser.Parse(html);
+            var token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("head x--y-- z", token.Value);
+        }
     }
 }
