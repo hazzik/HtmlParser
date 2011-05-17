@@ -5,7 +5,7 @@ namespace HtmlParser
     [DebuggerDisplay("{Name} = {Value}")]
     public class HtmlAttribute
     {
-        public HtmlAttribute(string name)
+        internal HtmlAttribute(string name)
         {
             Name = name;
         }

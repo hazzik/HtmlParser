@@ -9,7 +9,7 @@ namespace HtmlParser
         private readonly ICollection<HtmlAttribute> attributes = new List<HtmlAttribute>();
         private readonly ICollection<HtmlNode> nodes = new List<HtmlNode>();
 
-        public HtmlNode(HtmlNodeType nodeType, string name)
+        internal HtmlNode(HtmlNodeType nodeType, string name)
         {
             NodeType = nodeType;
             Name = name;
