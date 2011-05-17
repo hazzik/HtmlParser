@@ -32,8 +32,22 @@ namespace HtmlParser
             get { return attributes; }
         }
 
+        public HtmlNode FirstChild { get; private set; }
+        
+        public HtmlNode LastChild { get; private set; }
+        
+        public HtmlNode NextSibling { get; private set; }
+        
+        public HtmlNode PreviousSibling { get; private set; }
+
         public void AppendChild(HtmlNode node)
         {
+            if (FirstChild == null)
+                FirstChild = node;
+            if (LastChild != null)
+                LastChild.NextSibling = node;
+            node.PreviousSibling = LastChild;
+            LastChild = node;
             childNodes.Add(node);
         }
 
