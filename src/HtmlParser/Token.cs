@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-namespace ClassLibrary3
+namespace HtmlParser
 {
     [DebuggerDisplay("{Builder}")]
     internal class Token

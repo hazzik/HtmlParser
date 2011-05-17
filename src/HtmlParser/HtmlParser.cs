@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClassLibrary3
+namespace HtmlParser
 {
     internal class HtmlParser
     {

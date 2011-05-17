@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace ClassLibrary3
+namespace HtmlParser.Tests
 {
     public class TreeBuilderFacts
     {
