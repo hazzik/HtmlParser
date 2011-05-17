@@ -1,6 +1,6 @@
 ﻿namespace HtmlParser
 {
-    internal enum HtmlNodeType
+    public enum HtmlNodeType
     {
         Element,
         Text,

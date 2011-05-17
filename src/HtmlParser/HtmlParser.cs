@@ -2,7 +2,7 @@ namespace HtmlParser
 {
     using System.Collections.Generic;
 
-    internal class HtmlParser
+    public static class HtmlParser
     {
         public static HtmlNode Parse(string html)
         {

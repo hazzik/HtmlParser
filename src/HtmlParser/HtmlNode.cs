@@ -4,7 +4,7 @@ namespace HtmlParser
     using System.Diagnostics;
 
     [DebuggerDisplay("{Name}")]
-    internal class HtmlNode
+    public class HtmlNode
     {
         private readonly ICollection<HtmlAttribute> attributes = new List<HtmlAttribute>();
         private readonly ICollection<HtmlNode> nodes = new List<HtmlNode>();
