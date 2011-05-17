@@ -1,3 +1,3 @@
 ﻿* self-closing tags [done]
-* comments
+* comments [done]
 * cdata tags

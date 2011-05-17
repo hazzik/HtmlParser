@@ -35,7 +35,7 @@ namespace HtmlParser
 
         public static IEnumerable<HtmlNode> BuildTree(IEnumerable<Token> tokens)
         {
-            var documentNode = new HtmlNode();
+            var documentNode = new HtmlNode(HtmlNodeType.Element, "#document");
 
             HtmlNode currentNode = documentNode;
             var stack = new Stack<HtmlNode>();
@@ -49,10 +49,7 @@ namespace HtmlParser
                         elementsFlags.TryGetValue(currentNode.Name ?? string.Empty, out elementFlag);
                         if (elementFlag == HtmlElementFlag.Empty)
                             currentNode = stack.Pop();
-                        var node = new HtmlNode
-                                       {
-                                           Name = token.Value
-                                       };
+                        var node = new HtmlNode(HtmlNodeType.Element, token.Value);
                         currentNode.AddChild(node);
                         stack.Push(currentNode);
                         currentNode = node;
@@ -71,7 +68,10 @@ namespace HtmlParser
                         currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
-                        currentNode.AddChild(new HtmlNode {Name = token.Value});
+                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Text, token.Value));
+                        break;
+                    case TokenType.Comment:
+                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Comment, token.Value));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

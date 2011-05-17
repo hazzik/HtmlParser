@@ -7,6 +7,22 @@
     public class TreeBuilderFacts
     {
         [Fact]
+        public void Comment()
+        {
+            var comment = new Token(TokenType.Comment);
+            comment.Builder.Append("head");
+
+            var tokens = new[]
+                             {
+                                 comment,
+                             };
+
+            HtmlNode node = TreeBuilder.BuildTree(tokens).First();
+            Assert.Equal(HtmlNodeType.Comment, node.NodeType);
+            Assert.Equal("head", node.Name);
+        }
+
+        [Fact]
         public void AttributeName()
         {
             var openTag = new Token(TokenType.OpenTag);
