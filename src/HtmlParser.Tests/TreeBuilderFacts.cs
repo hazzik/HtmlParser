@@ -38,7 +38,7 @@
                              };
 
             HtmlNode node = TreeBuilder.Build(tokens).Nodes.First();
-            HtmlAttribute attribute = node.Attributes.First();
+            var attribute = node.Attributes.First();
             Assert.Equal("xxx", attribute.Name);
         }
 
@@ -62,7 +62,7 @@
                              };
 
             HtmlNode node = TreeBuilder.Build(tokens).Nodes.First();
-            HtmlAttribute attribute = node.Attributes.First();
+            var attribute = node.Attributes.First();
             Assert.Equal("xxx", attribute.Name);
             Assert.Equal("yyy", attribute.Value);
         }

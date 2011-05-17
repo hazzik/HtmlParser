@@ -3,7 +3,9 @@
     public enum HtmlNodeType
     {
         Element,
+        Attribute,
         Text,
-        Comment
+        Comment,
+        Document
     }
 }

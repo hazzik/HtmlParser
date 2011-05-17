@@ -39,7 +39,7 @@ namespace HtmlParser
 
             HtmlNode currentNode = documentNode;
             var stack = new Stack<HtmlNode>();
-            HtmlAttribute currentAttribute = null;
+            HtmlNode currentAttribute = null;
             foreach (Token token in tokens)
             {
                 switch (token.Type)
@@ -59,17 +59,17 @@ namespace HtmlParser
                         currentNode = stack.Pop();
                         break;
                     case TokenType.AttributeName:
-                        currentAttribute = new HtmlAttribute(token.Value);
+                        currentAttribute = new HtmlNode(HtmlNodeType.Attribute, token.Value);
                         currentNode.AddAttribute(currentAttribute);
                         break;
                     case TokenType.AttributeValue:
                         currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
-                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Text, token.Value));
+                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Text, "#text", token.Value));
                         break;
                     case TokenType.Comment:
-                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Comment, token.Value));
+                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Comment, "#comment", token.Value));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

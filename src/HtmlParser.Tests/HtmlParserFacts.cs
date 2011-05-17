@@ -73,7 +73,7 @@
             IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
             HtmlNode first = nodes.First();
             Assert.Equal("head", first.Name);
-            HtmlAttribute last = first.Attributes.Single();
+            var last = first.Attributes.Single();
             Assert.Equal("x", last.Name);
         }
     }
