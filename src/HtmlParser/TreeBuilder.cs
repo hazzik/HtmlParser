@@ -46,7 +46,8 @@ namespace HtmlParser
                 {
                     case TokenType.OpenTag:
                         HtmlElementFlag elementFlag;
-                        elementsFlags.TryGetValue(currentNode.Name ?? string.Empty, out elementFlag);
+                        var key = currentNode.Name ?? string.Empty;
+                        elementsFlags.TryGetValue(key.ToLower(), out elementFlag);
                         if (elementFlag == HtmlElementFlag.Empty)
                             currentNode = stack.Pop();
                         var node = new HtmlNode(HtmlNodeType.Element, token.Value);
@@ -58,10 +59,7 @@ namespace HtmlParser
                         currentNode = stack.Pop();
                         break;
                     case TokenType.AttributeName:
-                        currentAttribute = new HtmlAttribute
-                                               {
-                                                   Name = token.Value
-                                               };
+                        currentAttribute = new HtmlAttribute(token.Value);
                         currentNode.AddAttribute(currentAttribute);
                         break;
                     case TokenType.AttributeValue:

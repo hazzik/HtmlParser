@@ -1,3 +1,4 @@
 ﻿* self-closing tags [done]
 * comments [done]
 * cdata tags
+* doctype

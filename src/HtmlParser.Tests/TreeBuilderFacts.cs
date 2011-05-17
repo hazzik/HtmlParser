@@ -121,5 +121,23 @@
             List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
             Assert.Equal(3, nodes.Count);
         }
+        
+        [Fact]
+        public void ThreeSelfClosingTagUpperCaseBr()
+        {
+            var br1 = new Token(TokenType.OpenTag, "BR");
+            var br2 = new Token(TokenType.OpenTag, "BR");
+            var br3 = new Token(TokenType.OpenTag, "BR");
+
+            var tokens = new[]
+                             {
+                                 br1,
+                                 br2,
+                                 br3,
+                             };
+
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
+            Assert.Equal(3, nodes.Count);
+        }
     }
 }
