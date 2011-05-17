@@ -384,6 +384,17 @@ namespace HtmlParser.Tests
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x=y z", token.Value);
         }
+        
+        [Fact]
+        public void ParseCommentWithTripleCloseMinus()
+        {
+            const string html = "<--head x=y z--->";
+
+            var tokens = TokenParser.Parse(html);
+            var token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("head x=y z-", token.Value);
+        }
 
         [Fact]
         public void DoesNotParseAsCommentLtWithSingleMinus()

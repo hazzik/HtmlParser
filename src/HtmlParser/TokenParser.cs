@@ -92,7 +92,7 @@ namespace HtmlParser
                 context.CurrentToken.Builder.Append('<');
                 return true;
             }
-            if (context.State == ParseState.Default || context.State == ParseState.Text)
+            if (context.State == ParseState.Text)
             {
                 context.SetState(ParseState.WhaitForTagOrComment);
                 return true;
@@ -111,7 +111,7 @@ namespace HtmlParser
                 context.State == ParseState.WaitForGt)
             {
                 tokens.Add(context.CurrentToken);
-                context.SwitchState(ParseState.Default, TokenType.Text);
+                context.SwitchState(ParseState.Text, TokenType.Text);
                 return true;
             }
             return false;

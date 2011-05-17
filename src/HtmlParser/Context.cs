@@ -4,7 +4,7 @@ namespace HtmlParser
     {
         public Context()
         {
-            State = ParseState.Default;
+            State = ParseState.Text;
             CurrentToken = new Token(TokenType.Text);
         }
 

@@ -4,7 +4,6 @@ namespace HtmlParser
 {
     internal enum ParseState
     {
-        Default,
         Text,
         Tag,
         AttibuteName,
