@@ -71,15 +71,15 @@ namespace HtmlParser
                 context.SetState(ParseState.WaitForSecondCloseMinus);
                 return true;
             }
+            if (context.State == ParseState.WhaitForTagOrComment)
+            {
+                context.SetState(ParseState.WaitForSecondOpenMinus);
+                return true;
+            }
             if (context.State == ParseState.WaitForSecondOpenMinus)
             {
                 tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.Comment, TokenType.Comment);
-                return true;
-            }
-            if (context.State == ParseState.WhaitForTagOrComment)
-            {
-                context.SetState(ParseState.WaitForSecondOpenMinus);
                 return true;
             }
             return false;
@@ -98,7 +98,10 @@ namespace HtmlParser
                 return true;
             }
             if (context.State == ParseState.AttibuteValueBegin)
+            {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            }
             return false;
         }
 
@@ -131,7 +134,10 @@ namespace HtmlParser
                 return true;
             }
             if (context.State == ParseState.AttibuteValueBegin)
+            {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            }
             return false;
         }
 
@@ -139,12 +145,14 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteName)
             {
-                tokens.Add(context.CurrentToken);
-                context.SwitchState(ParseState.AttibuteValueBegin, TokenType.AttributeValue);
+                context.SetState(ParseState.AttibuteValueBegin);
                 return true;
             }
             if (context.State == ParseState.AttibuteValueBegin)
+            {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            }
             return false;
         }
 
@@ -152,6 +160,7 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
             }
             if (context.State == ParseState.WhaitForTagOrComment)
@@ -181,6 +190,7 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.DoubleQuotedAttibuteValue, TokenType.AttributeValue);
                 return true;
             }
@@ -197,6 +207,7 @@ namespace HtmlParser
         {
             if (context.State == ParseState.AttibuteValueBegin)
             {
+                tokens.Add(context.CurrentToken); 
                 context.SwitchState(ParseState.SingleQuotedAttibuteValue, TokenType.AttributeValue);
                 return true;
             }
