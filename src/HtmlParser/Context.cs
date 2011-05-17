@@ -12,10 +12,12 @@ namespace HtmlParser
 
         public TokenBuilder TokenBuilder { get; private set; }
 
-        public void SwitchState(ParseState state, TokenType tokenType)
+        public Token SwitchState(ParseState state, TokenType tokenType)
         {
             SetState(state);
+            var token = TokenBuilder.Create();
             TokenBuilder = new TokenBuilder(tokenType);
+            return token;
         }
 
         public void SetState(ParseState state)
