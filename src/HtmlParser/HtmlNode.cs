@@ -7,7 +7,7 @@ namespace HtmlParser
     public abstract class HtmlNode
     {
         private readonly ICollection<HtmlNode> attributes = new List<HtmlNode>();
-        private readonly ICollection<HtmlNode> nodes = new List<HtmlNode>();
+        private readonly ICollection<HtmlNode> childNodes = new List<HtmlNode>();
 
         protected internal HtmlNode(HtmlNodeType nodeType, string name, string value = null)
         {
@@ -22,9 +22,9 @@ namespace HtmlParser
 
         public string Value { get; set; }
 
-        public IEnumerable<HtmlNode> Nodes
+        public IEnumerable<HtmlNode> ChildNodes
         {
-            get { return nodes; }
+            get { return childNodes; }
         }
 
         public IEnumerable<HtmlNode> Attributes
@@ -32,12 +32,12 @@ namespace HtmlParser
             get { return attributes; }
         }
 
-        public void AddChild(HtmlNode node)
+        public void AppendChild(HtmlNode node)
         {
-            nodes.Add(node);
+            childNodes.Add(node);
         }
 
-        public void AddAttribute(HtmlNode attribute)
+        public void AppendAttribute(HtmlNode attribute)
         {
             attributes.Add(attribute);
         }

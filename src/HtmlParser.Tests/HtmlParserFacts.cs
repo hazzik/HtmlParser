@@ -10,7 +10,7 @@
         public void ParseNodeHtml()
         {
             const string html = "<html></html>";
-            HtmlNode node = HtmlParser.Parse(html).Nodes.First();
+            HtmlNode node = HtmlParser.Parse(html).ChildNodes.First();
             Assert.Equal("html", node.Name);
         }
 
@@ -18,7 +18,7 @@
         public void ParseNodeBody()
         {
             const string html = "<body></body>";
-            HtmlNode node = HtmlParser.Parse(html).Nodes.First();
+            HtmlNode node = HtmlParser.Parse(html).ChildNodes.First();
             Assert.Equal("body", node.Name);
         }
 
@@ -26,7 +26,7 @@
         public void Parse2Tags()
         {
             const string html = "<head></head><body></body>";
-            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
             HtmlNode last = nodes.Last();
             Assert.Equal("head", first.Name);
@@ -37,7 +37,7 @@
         public void ParseTextAndTag()
         {
             const string html = "<<head></head>";
-            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
             HtmlNode last = nodes.Last();
             Assert.Equal("<", first.Name);
@@ -48,7 +48,7 @@
         public void ParseTextAndTag2()
         {
             const string html = "<hea<head></head>";
-            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
             HtmlNode last = nodes.Last();
             Assert.Equal("<hea", first.Name);
@@ -59,9 +59,9 @@
         public void ParseNestedTags()
         {
             const string html = "<head><title></title></head>";
-            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
-            HtmlNode last = first.Nodes.Single();
+            HtmlNode last = first.ChildNodes.Single();
             Assert.Equal("head", first.Name);
             Assert.Equal("title", last.Name);
         }
@@ -70,7 +70,7 @@
         public void ParseAttribute()
         {
             const string html = "<head x></head>";
-            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).Nodes;
+            IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
             Assert.Equal("head", first.Name);
             var last = first.Attributes.Single();

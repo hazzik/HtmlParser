@@ -51,7 +51,7 @@ namespace HtmlParser
                         if (elementFlag == HtmlElementFlag.Empty)
                             currentNode = stack.Pop();
                         var node = new HtmlElementNode(token.Value);
-                        currentNode.AddChild(node);
+                        currentNode.AppendChild(node);
                         stack.Push(currentNode);
                         currentNode = node;
                         break;
@@ -60,16 +60,16 @@ namespace HtmlParser
                         break;
                     case TokenType.AttributeName:
                         currentAttribute = new HtmlAttributeNode(token.Value);
-                        currentNode.AddAttribute(currentAttribute);
+                        currentNode.AppendAttribute(currentAttribute);
                         break;
                     case TokenType.AttributeValue:
                         currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
-                        currentNode.AddChild(new HtmlTextNode(token.Value));
+                        currentNode.AppendChild(new HtmlTextNode(token.Value));
                         break;
                     case TokenType.Comment:
-                        currentNode.AddChild(new HtmlCommentNode(token.Value));
+                        currentNode.AppendChild(new HtmlCommentNode(token.Value));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

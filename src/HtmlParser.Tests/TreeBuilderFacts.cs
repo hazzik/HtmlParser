@@ -16,7 +16,7 @@
                                  comment,
                              };
 
-            HtmlNode node = TreeBuilder.Build(tokens).Nodes.First();
+            HtmlNode node = TreeBuilder.Build(tokens).ChildNodes.First();
             Assert.Equal(HtmlNodeType.Comment, node.NodeType);
             Assert.Equal("head", node.Name);
         }
@@ -37,7 +37,7 @@
                                  closeTag
                              };
 
-            HtmlNode node = TreeBuilder.Build(tokens).Nodes.First();
+            HtmlNode node = TreeBuilder.Build(tokens).ChildNodes.First();
             var attribute = node.Attributes.First();
             Assert.Equal("xxx", attribute.Name);
         }
@@ -61,7 +61,7 @@
                                  closeTag
                              };
 
-            HtmlNode node = TreeBuilder.Build(tokens).Nodes.First();
+            HtmlNode node = TreeBuilder.Build(tokens).ChildNodes.First();
             var attribute = node.Attributes.First();
             Assert.Equal("xxx", attribute.Name);
             Assert.Equal("yyy", attribute.Value);
@@ -80,7 +80,7 @@
                                  body,
                              };
 
-            List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
             Assert.Equal(2, nodes.Count);
         }
 
@@ -100,7 +100,7 @@
                                  innerBr,
                              };
 
-            List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
             Assert.Equal(2, nodes.Count);
         }
 
@@ -118,7 +118,7 @@
                                  br3,
                              };
 
-            List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
             Assert.Equal(3, nodes.Count);
         }
         
@@ -136,7 +136,7 @@
                                  br3,
                              };
 
-            List<HtmlNode> nodes = TreeBuilder.Build(tokens).Nodes.ToList();
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
             Assert.Equal(3, nodes.Count);
         }
     }
