@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-
 namespace HtmlParser
 {
+    using System.Collections.Generic;
+
     internal class HtmlParser
     {
-        public static IEnumerable<HtmlNode> Parse(string html)
+        public static HtmlNode Parse(string html)
         {
             IEnumerable<Token> tokens = TokenParser.Parse(html);
-            return TreeBuilder.BuildTree(tokens);
+            return TreeBuilder.Build(tokens);
         }
     }
 }

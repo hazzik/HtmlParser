@@ -33,7 +33,7 @@ namespace HtmlParser
                     {"br", HtmlElementFlag.Empty},
                 };
 
-        public static IEnumerable<HtmlNode> BuildTree(IEnumerable<Token> tokens)
+        public static HtmlNode Build(IEnumerable<Token> tokens)
         {
             var documentNode = new HtmlNode(HtmlNodeType.Element, "#document");
 
@@ -77,7 +77,7 @@ namespace HtmlParser
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            return documentNode.Nodes;
+            return documentNode;
         }
     }
 }
