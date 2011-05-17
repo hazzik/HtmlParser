@@ -373,5 +373,16 @@ namespace HtmlParser.Tests
             Assert.Equal(TokenType.AttributeName, secondAttrName.Type);
             Assert.Equal("z", secondAttrName.Value);
         }
+
+        [Fact]
+        public void ParseComments()
+        {
+            const string html = "<--head x=y z-->";
+
+            var tokens = TokenParser.Parse(html);
+            var token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("head x=y z", token.Value);
+        }
     }
 }

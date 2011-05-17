@@ -11,6 +11,11 @@ namespace HtmlParser
         AttibuteValueBegin,
         AttibuteValue,
         DoubleQuotedAttibuteValue,
-        SingleQuotedAttibuteValue
+        SingleQuotedAttibuteValue,
+        WhaitForTagOrComment,
+        WaitForSecondOpenMinus,
+        Comment,
+        WaitForSecondCloseMinus,
+        WaitForGt
     }
 }

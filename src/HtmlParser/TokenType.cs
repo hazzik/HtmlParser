@@ -1,5 +1,3 @@
-using System;
-
 namespace HtmlParser
 {
     internal enum TokenType
@@ -9,5 +7,6 @@ namespace HtmlParser
         AttributeName,
         AttributeValue,
         Text,
+        Comment
     }
 }

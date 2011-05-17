@@ -1,5 +1,3 @@
-using System;
-
 namespace HtmlParser
 {
     internal class Context
@@ -7,23 +5,22 @@ namespace HtmlParser
         public Context()
         {
             State = ParseState.Default;
-            PreviousToken = new Token(TokenType.Text);
             CurrentToken = new Token(TokenType.Text);
         }
 
         public ParseState State { get; private set; }
 
-        public Token PreviousToken;
-
-        public char PreviousChar { get; set; }
-
         public Token CurrentToken { get; private set; }
 
         public void SwitchState(ParseState state, TokenType tokenType)
         {
-            State = state;
-            PreviousToken = CurrentToken;
+            SetState(state);
             CurrentToken = new Token(tokenType);
+        }
+
+        public void SetState(ParseState state)
+        {
+            State = state;
         }
     }
 }

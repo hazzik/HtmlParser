@@ -16,7 +16,6 @@ namespace HtmlParser
                 {
                     context.CurrentToken.Builder.Append(ch);
                 }
-                context.PreviousChar = ch;
             }
 
             tokens.Add(context.CurrentToken);
@@ -49,24 +48,53 @@ namespace HtmlParser
             {
                 return HandleSingleQuote(tokens, context);
             }
+            if(ch == '-')
+            {
+                return HandleMinus(tokens, context);
+            }
             if (char.IsWhiteSpace(ch))
             {
                 return HandleWhitespace(tokens, context);
             }
-            return HandleAny(context);
+            return HandleAny(tokens, context);
+        }
+
+        private static bool HandleMinus(ICollection<Token> tokens, Context context)
+        {
+            if (context.State == ParseState.WaitForSecondCloseMinus)
+            {
+                context.SetState(ParseState.WaitForGt);
+                return true;
+            }
+            if (context.State == ParseState.Comment)
+            {
+                context.SetState(ParseState.WaitForSecondCloseMinus);
+                return true;
+            }
+            if (context.State == ParseState.WaitForSecondOpenMinus)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.Comment, TokenType.Comment);
+                return true;
+            }
+            if (context.State == ParseState.WhaitForTagOrComment)
+            {
+                context.SetState(ParseState.WaitForSecondOpenMinus);
+                return true;
+            }
+            return false;
         }
 
         private static bool HandleLt(ICollection<Token> tokens, Context context)
         {
-            if (context.State == ParseState.Default || context.State == ParseState.Text)
+            if (context.State == ParseState.WhaitForTagOrComment)
             {
-                tokens.Add(context.CurrentToken);
-                context.SwitchState(ParseState.Tag, TokenType.OpenTag);
+                context.CurrentToken.Builder.Append('<');
                 return true;
             }
-            if (context.State == ParseState.Tag)
+            if (context.State == ParseState.Default || context.State == ParseState.Text)
             {
-                context.PreviousToken.Builder.Append(context.PreviousChar);
+                context.SetState(ParseState.WhaitForTagOrComment);
                 return true;
             }
             if (context.State == ParseState.AttibuteValueBegin)
@@ -76,7 +104,11 @@ namespace HtmlParser
 
         private static bool HandleGt(ICollection<Token> tokens, Context context)
         {
-            if (context.State == ParseState.Tag || context.State == ParseState.AttibuteName || context.State == ParseState.AttibuteValueBegin || context.State == ParseState.AttibuteValue)
+            if (context.State == ParseState.Tag ||
+                context.State == ParseState.AttibuteName ||
+                context.State == ParseState.AttibuteValueBegin ||
+                context.State == ParseState.AttibuteValue || 
+                context.State == ParseState.WaitForGt)
             {
                 tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.Default, TokenType.Text);
@@ -87,9 +119,9 @@ namespace HtmlParser
 
         private static bool HandleSlash(ICollection<Token> tokens, Context context)
         {
-            if (context.State == ParseState.Tag)
+            if (context.State == ParseState.WhaitForTagOrComment)
             {
-                context.CurrentToken.Type = TokenType.CloseTag;
+                context.SwitchState(ParseState.Tag, TokenType.CloseTag);
                 return true;
             }
             if (context.State == ParseState.AttibuteName)
@@ -116,10 +148,17 @@ namespace HtmlParser
             return false;
         }
 
-        private static bool HandleAny(Context context)
+        private static bool HandleAny(ICollection<Token> tokens, Context context)
         {
             if (context.State == ParseState.AttibuteValueBegin)
+            {
                 context.SwitchState(ParseState.AttibuteValue, TokenType.AttributeValue);
+            }
+            if (context.State == ParseState.WhaitForTagOrComment)
+            {
+                tokens.Add(context.CurrentToken);
+                context.SwitchState(ParseState.Tag, TokenType.OpenTag);
+            }
             return false;
         }
 
