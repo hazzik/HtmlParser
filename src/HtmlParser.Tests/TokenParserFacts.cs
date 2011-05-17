@@ -132,6 +132,25 @@ namespace HtmlParser.Tests
         }
 
         [Fact]
+        public void ParseTextInsideTag()
+        {
+            const string html = "<head>text</head>";
+            List<Token> tokens = TokenParser.Parse(html).ToList();
+
+            var first = tokens.First();
+            Assert.Equal(TokenType.OpenTag, first.Type);
+            Assert.Equal("head", first.Value);
+            
+            Token text = tokens[1];
+            Assert.Equal(TokenType.Text, text.Type);
+            Assert.Equal("text", text.Value);
+            
+            Token closeTag = tokens[2];
+            Assert.Equal(TokenType.CloseTag, closeTag.Type);
+            Assert.Equal("head", closeTag.Value);
+        }
+
+        [Fact]
         public void ParseAttributeValueWithSlashInside()
         {
             const string html = "<head x=y/z>";

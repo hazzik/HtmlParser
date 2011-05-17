@@ -124,6 +124,7 @@ namespace HtmlParser
         {
             if (context.State == ParseState.WhaitForTagOrComment)
             {
+                tokens.Add(context.CurrentToken);
                 context.SwitchState(ParseState.Tag, TokenType.CloseTag);
                 return true;
             }
