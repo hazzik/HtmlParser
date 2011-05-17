@@ -3,7 +3,7 @@ namespace HtmlParser
     using System;
     using System.Collections.Generic;
 
-    internal class TreeBuilder
+    internal static class TreeBuilder
     {
         private static readonly IDictionary<string, HtmlElementFlag> elementsFlags =
             new Dictionary<string, HtmlElementFlag>
@@ -35,11 +35,11 @@ namespace HtmlParser
 
         public static HtmlNode Build(IEnumerable<Token> tokens)
         {
-            var documentNode = new HtmlNode(HtmlNodeType.Element, "#document");
+            var documentNode = new HtmlDocumentNode();
 
             HtmlNode currentNode = documentNode;
             var stack = new Stack<HtmlNode>();
-            HtmlNode currentAttribute = null;
+            HtmlAttributeNode currentAttribute = null;
             foreach (Token token in tokens)
             {
                 switch (token.Type)
@@ -50,7 +50,7 @@ namespace HtmlParser
                         elementsFlags.TryGetValue(key.ToLower(), out elementFlag);
                         if (elementFlag == HtmlElementFlag.Empty)
                             currentNode = stack.Pop();
-                        var node = new HtmlNode(HtmlNodeType.Element, token.Value);
+                        var node = new HtmlElementNode(token.Value);
                         currentNode.AddChild(node);
                         stack.Push(currentNode);
                         currentNode = node;
@@ -59,17 +59,17 @@ namespace HtmlParser
                         currentNode = stack.Pop();
                         break;
                     case TokenType.AttributeName:
-                        currentAttribute = new HtmlNode(HtmlNodeType.Attribute, token.Value);
+                        currentAttribute = new HtmlAttributeNode(token.Value);
                         currentNode.AddAttribute(currentAttribute);
                         break;
                     case TokenType.AttributeValue:
                         currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
-                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Text, "#text", token.Value));
+                        currentNode.AddChild(new HtmlTextNode(token.Value));
                         break;
                     case TokenType.Comment:
-                        currentNode.AddChild(new HtmlNode(HtmlNodeType.Comment, "#comment", token.Value));
+                        currentNode.AddChild(new HtmlCommentNode(token.Value));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
