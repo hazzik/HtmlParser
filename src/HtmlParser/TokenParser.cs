@@ -12,40 +12,7 @@ namespace HtmlParser
             var tokens = new List<Token>();
             foreach (char ch in html)
             {
-                bool handled;
-                if (ch == '<')
-                {
-                    handled = HandleLt(tokens, context);
-                }
-                else if (ch == '>')
-                {
-                    handled = HandleGt(tokens, context);
-                }
-                else if (ch == '/')
-                {
-                    handled = HandleSlash(tokens, context);
-                }
-                else if (ch == '=')
-                {
-                    handled = HandleEquals(tokens, context);
-                }
-                else if (ch == '"')
-                {
-                    handled = HandleDoubleQuote(tokens, context);
-                }
-                else if (ch == '\'')
-                {
-                    handled = HandleSingleQuote(tokens, context);
-                }
-                else if (char.IsWhiteSpace(ch))
-                {
-                    handled = HandleWhitespace(tokens, context);
-                }
-                else
-                {
-                    handled = HandleAny(context);
-                }
-                if (!handled)
+                if (HandleCharacter(tokens, context, ch) == false)
                 {
                     context.CurrentToken.Builder.Append(ch);
                 }
@@ -54,6 +21,39 @@ namespace HtmlParser
 
             tokens.Add(context.CurrentToken);
             return tokens.Where(x => x.IsNotEmpty());
+        }
+
+        private static bool HandleCharacter(ICollection<Token> tokens, Context context, char ch)
+        {
+            if (ch == '<')
+            {
+                return HandleLt(tokens, context);
+            }
+            if (ch == '>')
+            {
+                return HandleGt(tokens, context);
+            }
+            if (ch == '/')
+            {
+                return HandleSlash(tokens, context);
+            }
+            if (ch == '=')
+            {
+                return HandleEquals(tokens, context);
+            }
+            if (ch == '"')
+            {
+                return HandleDoubleQuote(tokens, context);
+            }
+            if (ch == '\'')
+            {
+                return HandleSingleQuote(tokens, context);
+            }
+            if (char.IsWhiteSpace(ch))
+            {
+                return HandleWhitespace(tokens, context);
+            }
+            return HandleAny(context);
         }
 
         private static bool HandleLt(ICollection<Token> tokens, Context context)
