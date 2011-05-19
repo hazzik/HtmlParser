@@ -18,7 +18,7 @@
 
             HtmlNode node = TreeBuilder.Build(tokens).ChildNodes.First();
             Assert.Equal(HtmlNodeType.Comment, node.NodeType);
-            Assert.Equal("head", node.Name);
+            Assert.Equal("head", node.Value);
         }
 
         [Fact]

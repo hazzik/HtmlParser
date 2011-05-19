@@ -40,7 +40,7 @@
             IEnumerable<HtmlNode> nodes = HtmlParser.Parse(html).ChildNodes;
             HtmlNode first = nodes.First();
             HtmlNode last = nodes.Last();
-            Assert.Equal("<", first.Name);
+            Assert.Equal("<", first.Value);
             Assert.Equal("head", last.Name);
         }
 
