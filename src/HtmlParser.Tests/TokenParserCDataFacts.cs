@@ -35,7 +35,7 @@
         	Assert.Equal(3, tokens.Count());
         }
 
-		[Fact(Skip = "not now")]
+		[Fact]
 		public void ScriptWithAttributes()
 		{
 			const string html = "<script type=\"text/javascript\">//<br></script>";

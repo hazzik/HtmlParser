@@ -3,7 +3,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	internal class AttibuteValueHandler : ParserState
+	internal class AttibuteValueHandler : AttibuteHandlerBase
 	{
 		private readonly IEnumerable<char> chars;
 
@@ -14,17 +14,16 @@
 
 		protected override bool HandleCore(TokenParser context, ICollection<Token> tokens, char ch)
 		{
-			if (ch == '>')
-			{
-				tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
-				return true;
-			}
 			if (chars.Contains(ch))
 			{
-				tokens.Add(context.SwitchState(TokenType.AttributeName, new AttibuteNameHandler()));
+				tokens.Add(context.SwitchState(TokenType.AttributeName,
+				                               new AttibuteNameHandler
+				                               	{
+				                               		ReplaceNextTagOrTextTokenWithCData = ReplaceNextTagOrTextTokenWithCData
+				                               	}));
 				return true;
 			}
-			return false;
+			return base.HandleCore(context, tokens, ch);
 		}
 	}
 }

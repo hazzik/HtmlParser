@@ -3,30 +3,31 @@
 	using System;
 	using System.Collections.Generic;
 
-	internal class AttibuteNameHandler : ParserState
+	internal class AttibuteNameHandler : AttibuteHandlerBase
 	{
 		private State state = State.Default;
 
 		protected override bool HandleCore(TokenParser context, ICollection<Token> tokens, char ch)
 		{
-			if (ch == '>')
-			{
-				tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
-				return true;
-			}
-
 			if (state == State.AttributeValueBegin)
 			{
 				if (ch == '"' || ch == '\'')
 				{
-					tokens.Add(context.SwitchState(TokenType.AttributeValue, new AttibuteValueHandler(ch)));
+					tokens.Add(context.SwitchState(TokenType.AttributeValue, new AttibuteValueHandler(ch)
+					                                                         	{
+					                                                         		ReplaceNextTagOrTextTokenWithCData =
+					                                                         			ReplaceNextTagOrTextTokenWithCData
+					                                                         	}));
 					return true;
 				}
 
 				if (!Char.IsWhiteSpace(ch))
 				{
 					tokens.Add(context.SwitchState(TokenType.AttributeValue,
-					                               new AttibuteValueHandler(' ', '\t', '\r', '\x00a0', '\x0085')));
+					                               new AttibuteValueHandler(' ', '\t', '\r', '\x00a0', '\x0085')
+					                               	{
+					                               		ReplaceNextTagOrTextTokenWithCData = ReplaceNextTagOrTextTokenWithCData
+					                               	}));
 					return false;
 				}
 
@@ -41,10 +42,14 @@
 
 			if (ch == '/' || Char.IsWhiteSpace(ch))
 			{
-				tokens.Add(context.SwitchState(TokenType.AttributeName, new AttibuteNameHandler()));
+				tokens.Add(context.SwitchState(TokenType.AttributeName, new AttibuteNameHandler
+				                                                        	{
+				                                                        		ReplaceNextTagOrTextTokenWithCData =
+				                                                        			ReplaceNextTagOrTextTokenWithCData
+				                                                        	}));
 				return true;
 			}
-			return false;
+			return base.HandleCore(context, tokens, ch);
 		}
 
 		#region Nested type: State

@@ -19,7 +19,12 @@
 			}
 			if (Char.IsWhiteSpace(ch))
 			{
-				var token = context.SwitchState(TokenType.AttributeName, new AttibuteNameHandler());
+				var handler = new AttibuteNameHandler();
+				var token = context.SwitchState(TokenType.AttributeName, handler);
+				if (token.Type == TokenType.OpenTag && (token.Value == "script" || token.Value == "style"))
+				{
+					handler.ReplaceNextTagOrTextTokenWithCData = string.Format("</{0}", token.Value);
+				}
 				tokens.Add(token);
 				return true;
 			}

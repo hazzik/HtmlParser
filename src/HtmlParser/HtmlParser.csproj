@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttibuteHandlerBase.cs" />
     <Compile Include="AttibuteNameHandler.cs" />
     <Compile Include="AttibuteValueHandler.cs" />
     <Compile Include="CDataHandler.cs" />
