@@ -4,9 +4,9 @@
 
 	internal abstract class ParserState
 	{
-		protected abstract bool HandleCore(Context context, ICollection<Token> tokens, char ch);
+		protected abstract bool HandleCore(TokenParser context, ICollection<Token> tokens, char ch);
 
-		public void Handle(Context context, ICollection<Token> tokens, char ch)
+		public void Handle(TokenParser context, ICollection<Token> tokens, char ch)
 		{
 			if (HandleCore(context, tokens, ch) == false)
 			{

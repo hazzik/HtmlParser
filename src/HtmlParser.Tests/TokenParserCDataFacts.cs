@@ -9,7 +9,7 @@
         public void ScriptContentIsCData()
         {
             const string html = "<script>//<br></script>";
-            var tokens = TokenParser.Parse(html);
+            var tokens = new TokenParser().Parse(html);
         	Assert.Equal(3, tokens.Count());
         }
         
@@ -17,7 +17,7 @@
         public void ScriptCDataParsedCorrectly()
         {
             const string html = "<script>//<br></script>";
-            var tokens = TokenParser.Parse(html).ToList();
+            var tokens = new TokenParser().Parse(html).ToList();
 		
 			Assert.Equal(TokenType.OpenTag, tokens[0].Type);
 			Assert.Equal("script", tokens[0].Value);
@@ -31,7 +31,7 @@
         public void StyleContentIsCData()
         {
 			const string html = "<style>//<br></style>";
-            var tokens = TokenParser.Parse(html);
+            var tokens = new TokenParser().Parse(html);
         	Assert.Equal(3, tokens.Count());
         }
 
@@ -39,7 +39,7 @@
 		public void ScriptWithAttributes()
 		{
 			const string html = "<script type=\"text/javascript\">//<br></script>";
-			var tokens = TokenParser.Parse(html);
+			var tokens = new TokenParser().Parse(html);
 			Assert.Equal(5, tokens.Count());
 		} 
 	}

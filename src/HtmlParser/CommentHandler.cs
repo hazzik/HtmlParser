@@ -2,28 +2,15 @@
 {
 	using System.Collections.Generic;
 
-	internal class CommentHandler : ParserState
+	internal class CommentHandler : CDataCommentsParserStateBase
 	{
-		private string closeToken = "-->";
-		private int index;
-
-		protected override bool HandleCore(Context context, ICollection<Token> tokens, char ch)
+		public CommentHandler() : base("-->")
 		{
-			if (closeToken[index] == ch)
-			{
-				index++;
-				if (index >= closeToken.Length)
-				{
-					tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
-				}
-				return true;
-			}
-			if (index > 0)
-			{
-				context.TokenBuilder.Append(closeToken.Substring(0, index));
-				index = 0;
-			}
-			return false;
+		}
+
+		protected override void OnClose(TokenParser context, ICollection<Token> tokens)
+		{
+			tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
 		}
 	}
 }

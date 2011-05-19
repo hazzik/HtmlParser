@@ -5,7 +5,7 @@
 
 	internal class TagHandler : ParserState
 	{
-		protected override bool HandleCore(Context context, ICollection<Token> tokens, char ch)
+		protected override bool HandleCore(TokenParser context, ICollection<Token> tokens, char ch)
 		{
 			if (ch == '>')
 			{

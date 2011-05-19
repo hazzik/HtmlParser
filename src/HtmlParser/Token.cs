@@ -2,7 +2,7 @@
 {
     using System.Diagnostics;
 
-    [DebuggerDisplay("{Type, Value}")]
+    [DebuggerDisplay("{Type}, {Value}")]
     internal class Token
     {
         public Token(TokenType type, string value)

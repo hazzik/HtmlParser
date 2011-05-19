@@ -10,7 +10,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithEquals()
         {
             const string html = "=";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal("=", first.Value);
@@ -20,7 +20,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithLt()
         {
             const string html = "<";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal("<", first.Value);
@@ -30,7 +30,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithGt()
         {
             const string html = ">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal(">", first.Value);
@@ -40,7 +40,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithSlash()
         {
             const string html = "/";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal("/", first.Value);
@@ -50,7 +50,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithSingleQuote()
         {
             const string html = "'";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal("'", first.Value);
@@ -60,7 +60,7 @@ namespace HtmlParser.Tests
         public void ParseTextWithDoubleQuote()
         {
             const string html = "\"";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Token first = tokens.First();
             Assert.Equal(first.Type, TokenType.Text);
             Assert.Equal("\"", first.Value);
@@ -70,7 +70,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeName()
         {
             const string html = "<head x>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token last = tokens.Last();
             Assert.Equal(TokenType.AttributeName, last.Type);
@@ -81,7 +81,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeNameWithoutWhitespaces()
         {
             const string html = "<head x >";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token last = tokens.Last();
             Assert.Equal(TokenType.AttributeName, last.Type);
@@ -92,7 +92,7 @@ namespace HtmlParser.Tests
         public void ParseTwoAttributeNames()
         {
             const string html = "<head x y>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens[0].Value);
             Token firstAttr = tokens[1];
             Assert.Equal(TokenType.AttributeName, firstAttr.Type);
@@ -106,7 +106,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeValue()
         {
             const string html = "<head x=y>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -120,7 +120,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeValueWithWhitespaces()
         {
             const string html = "<head x= y >";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -134,7 +134,7 @@ namespace HtmlParser.Tests
         public void ParseTextInsideTag()
         {
             const string html = "<head>text</head>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
 
             Token first = tokens.First();
             Assert.Equal(TokenType.OpenTag, first.Type);
@@ -153,7 +153,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeValueWithSlashInside()
         {
             const string html = "<head x=y/z>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -167,7 +167,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeValueWithLt()
         {
             const string html = "<head x=<>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -181,7 +181,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeValueWithGt()
         {
             const string html = "<head x=>>x";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -195,7 +195,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValue()
         {
             const string html = "<head x=\"y\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -209,7 +209,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithWhitespaces()
         {
             const string html = "<head x=\"y z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -223,7 +223,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithSingleQuoteInside()
         {
             const string html = "<head x=\"y'z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -237,7 +237,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithEqualsInside()
         {
             const string html = "<head x=\"y=z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -251,7 +251,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithLtInside()
         {
             const string html = "<head x=\"y<z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -265,7 +265,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithGtInside()
         {
             const string html = "<head x=\"y>z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -279,7 +279,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeDoubleQuotedValueWithSlashInside()
         {
             const string html = "<head x=\"y/z\">";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -293,7 +293,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValue()
         {
             const string html = "<head x='y'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -307,7 +307,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValueWithDoublequoteInside()
         {
             const string html = "<head x='y\"z'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -321,7 +321,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValueWithEqualsInside()
         {
             const string html = "<head x='y=z'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -335,7 +335,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValueWithLtInside()
         {
             const string html = "<head x='y<z'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -349,7 +349,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValueWithGtInside()
         {
             const string html = "<head x='y>z'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -363,7 +363,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeSingleQuotedValueWithSlashInside()
         {
             const string html = "<head x='y/z'>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
             Token attrName = tokens[1];
             Assert.Equal(TokenType.AttributeName, attrName.Type);
@@ -377,7 +377,7 @@ namespace HtmlParser.Tests
         public void ParseAttributeNameAfterAttributeValue()
         {
             const string html = "<head x=y z>";
-            List<Token> tokens = TokenParser.Parse(html).ToList();
+            List<Token> tokens = new TokenParser().Parse(html).ToList();
             Assert.Equal("head", tokens.First().Value);
 
             Token attrName = tokens[1];
@@ -398,7 +398,7 @@ namespace HtmlParser.Tests
         {
             const string html = "<--head x=y z-->";
 
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x=y z", token.Value);
@@ -409,7 +409,7 @@ namespace HtmlParser.Tests
         {
             const string html = "<--head x=y z--->";
 
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x=y z-", token.Value);
@@ -420,7 +420,7 @@ namespace HtmlParser.Tests
         {
             const string html = "<- head x=y z-->";
 
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Text, token.Type);
             Assert.Equal("<- head x=y z-->", token.Value);
@@ -431,7 +431,7 @@ namespace HtmlParser.Tests
         {
             const string html = "<--head x-y- z-->";
 
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x-y- z", token.Value);
@@ -442,7 +442,7 @@ namespace HtmlParser.Tests
         {
             const string html = "<--head x--y-- z-->";
 
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x--y-- z", token.Value);

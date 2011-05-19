@@ -6,7 +6,7 @@ namespace HtmlParser
     {
         public static HtmlNode Parse(string html)
         {
-            IEnumerable<Token> tokens = TokenParser.Parse(html);
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
             return TreeBuilder.Build(tokens);
         }
     }
