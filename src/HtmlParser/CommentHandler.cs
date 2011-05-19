@@ -4,58 +4,26 @@
 
 	internal class CommentHandler : ParserState
 	{
-		private State state = State.Default;
+		private string closeToken = "-->";
+		private int index;
 
 		protected override bool HandleCore(Context context, ICollection<Token> tokens, char ch)
 		{
-			if (state == State.Default)
+			if (closeToken[index] == ch)
 			{
-				if (ch == '-')
-				{
-					state = State.WaitForSecondMinus;
-					return true;
-				}
-				return false;
-			}
-			if (state == State.WaitForSecondMinus)
-			{
-				if (ch == '-')
-				{
-					state = State.WaitForGt;
-					return true;
-				}
-				state = State.Default;
-				context.TokenBuilder.Append("-");
-				return false;
-			}
-			if (state == State.WaitForGt)
-			{
-				if (ch == '>')
+				index++;
+				if (index >= closeToken.Length)
 				{
 					tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
-					return true;
 				}
-
-				if (ch == '-')
-				{
-					return false;
-				}
-				state = State.Default;
-				context.TokenBuilder.Append("--");
-				return false;
+				return true;
+			}
+			if (index > 0)
+			{
+				context.TokenBuilder.Append(closeToken.Substring(0, index));
+				index = 0;
 			}
 			return false;
 		}
-
-		#region Nested type: State
-
-		private enum State
-		{
-			Default,
-			WaitForSecondMinus,
-			WaitForGt
-		}
-
-		#endregion
 	}
 }
