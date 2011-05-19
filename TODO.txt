@@ -1,4 +1,6 @@
 ﻿* self-closing tags [done]
 * comments [done]
-* cdata tags
+* cdata tags [done]
+* self closing tags <br /> [done]
+* <![CDATA[
 * doctype

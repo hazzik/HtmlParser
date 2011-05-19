@@ -17,10 +17,10 @@
 				}
 				return true;
 			}
-			if (Char.IsWhiteSpace(ch))
+			if (ch == '/' || Char.IsWhiteSpace(ch))
 			{
 				var handler = new AttibuteNameHandler();
-				var token = context.SwitchState(TokenType.AttributeName, handler);
+				Token token = context.SwitchState(TokenType.AttributeName, handler);
 				if (token.Type == TokenType.OpenTag && (token.Value == "script" || token.Value == "style"))
 				{
 					handler.ReplaceNextTagOrTextTokenWithCData = string.Format("</{0}", token.Value);
