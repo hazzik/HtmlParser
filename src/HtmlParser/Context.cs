@@ -16,15 +16,10 @@ namespace HtmlParser
 
 		public Token SwitchState(TokenType tokenType, ParserState parserState)
 		{
-			SetState(parserState);
 			Token token = TokenBuilder.Create();
+			handler = parserState;
 			TokenBuilder = new TokenBuilder(tokenType);
 			return token;
-		}
-
-		public void SetState(ParserState parserState)
-		{
-			handler = parserState;
 		}
 
 		public void Handle(ICollection<Token> tokens, char ch)
