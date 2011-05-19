@@ -92,7 +92,7 @@ namespace HtmlParser.Tests
         {
             var doc = new HtmlDocumentNode();
             var a = new HtmlElementNode("a");
-            doc.AppendChild(new HtmlElementNode("br"));
+        	doc.AppendChild(a);
             Assert.Equal(doc, a.ParentNode);
         }
     }

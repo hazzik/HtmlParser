@@ -47,13 +47,15 @@ namespace HtmlParser
             if (FirstChild == null)
                 FirstChild = node;
 
+			node.PreviousSibling = LastChild;
+
             if (LastChild != null)
                 LastChild.NextSibling = node;
-            LastChild = node;
 
-            node.PreviousSibling = LastChild;
+			LastChild = node;
+            
             node.ParentNode = this;
-
+			
             childNodes.Add(node);
         }
 
