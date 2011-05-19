@@ -46,6 +46,7 @@
     <Compile Include="HtmlNodeFacts.cs" />
     <Compile Include="HtmlParserFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TokenParserCDataFacts.cs" />
     <Compile Include="TokenParserFacts.cs" />
     <Compile Include="TreeBuilderFacts.cs" />
   </ItemGroup>
