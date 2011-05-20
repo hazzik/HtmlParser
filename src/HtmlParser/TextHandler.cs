@@ -19,11 +19,6 @@
 			}
 			if (state == State.WaitForTagOrComment)
 			{
-				if (ch == '<')
-				{
-					context.TokenBuilder.Append('<');
-					return true;
-				}
 				if (ch == '/')
 				{
 					tokens.Add(context.SwitchState(TokenType.CloseTag, new TagHandler()));
@@ -33,6 +28,12 @@
 				{
 					state = State.WaitForMinus;
 					return true;
+				}
+				if (!char.IsLetter(ch))
+				{
+					state = State.Default;
+					context.TokenBuilder.Append('<');
+					return false;
 				}
 				tokens.Add(context.SwitchState(TokenType.OpenTag, new TagHandler()));
 				return false;

@@ -447,5 +447,15 @@ namespace HtmlParser.Tests
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x--y-- z", token.Value);
         }
+
+		[Fact]
+		public void DoesNotParseTagsWhichStartsWithNonLetters()
+		{
+			const string html = "<1head x>";
+			List<Token> tokens = new TokenParser().Parse(html).ToList();
+			Token single = tokens.Single();
+			Assert.Equal(TokenType.Text, single.Type);
+			Assert.Equal("<1head x>", single.Value);
+		}
     }
 }
