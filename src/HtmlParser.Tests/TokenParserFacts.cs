@@ -396,7 +396,7 @@ namespace HtmlParser.Tests
         [Fact]
         public void ParseComments()
         {
-            const string html = "<--head x=y z-->";
+            const string html = "<!--head x=y z-->";
 
             IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
@@ -407,7 +407,7 @@ namespace HtmlParser.Tests
         [Fact]
         public void ParseCommentWithTripleCloseMinus()
         {
-            const string html = "<--head x=y z--->";
+            const string html = "<!--head x=y z--->";
 
             IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
@@ -418,18 +418,18 @@ namespace HtmlParser.Tests
         [Fact]
         public void DoesNotParseAsCommentLtWithSingleMinus()
         {
-            const string html = "<- head x=y z-->";
+            const string html = "<!- head x=y z-->";
 
             IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
             Assert.Equal(TokenType.Text, token.Type);
-            Assert.Equal("<- head x=y z-->", token.Value);
+            Assert.Equal("<!- head x=y z-->", token.Value);
         }
 
         [Fact]
         public void DoesParseCommentWithMinusInside()
         {
-            const string html = "<--head x-y- z-->";
+            const string html = "<!--head x-y- z-->";
 
             IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();
@@ -440,7 +440,7 @@ namespace HtmlParser.Tests
         [Fact]
         public void DoesParseCommentWithDoubleMinusInside()
         {
-            const string html = "<--head x--y-- z-->";
+            const string html = "<!--head x--y-- z-->";
 
             IEnumerable<Token> tokens = new TokenParser().Parse(html);
             Token token = tokens.First();

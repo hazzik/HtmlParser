@@ -29,12 +29,23 @@
 					tokens.Add(context.SwitchState(TokenType.CloseTag, new TagHandler()));
 					return true;
 				}
+				if (ch == '!')
+				{
+					state = State.WaitForMinus;
+					return true;
+				}
+				tokens.Add(context.SwitchState(TokenType.OpenTag, new TagHandler()));
+				return false;
+			}
+			if (state == State.WaitForMinus)
+			{
 				if (ch == '-')
 				{
 					state = State.WaitForSecondMinus;
 					return true;
 				}
-				tokens.Add(context.SwitchState(TokenType.OpenTag, new TagHandler()));
+				state = State.Default;
+				context.TokenBuilder.Append("<!");
 				return false;
 			}
 			if (state == State.WaitForSecondMinus)
@@ -45,7 +56,7 @@
 					return true;
 				}
 				state = State.Default;
-				context.TokenBuilder.Append("<-");
+				context.TokenBuilder.Append("<!-");
 				return false;
 			}
 			return false;
@@ -57,6 +68,7 @@
 		{
 			Default,
 			WaitForTagOrComment,
+			WaitForMinus,
 			WaitForSecondMinus
 		}
 
