@@ -139,5 +139,37 @@
             List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
             Assert.Equal(3, nodes.Count);
         }
+        
+        [Fact]
+        public void TextAfterBrIsOutside()
+        {
+            var br = new Token(TokenType.OpenTag, "BR");
+            var rn = new Token(TokenType.Text, "\r\n");
+
+            var tokens = new[]
+                             {
+                                 br,
+                                 rn,
+                             };
+
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
+            Assert.Equal(2, nodes.Count);
+        }
+        
+        [Fact]
+        public void CommentAfterBrIsOutside()
+        {
+            var br = new Token(TokenType.OpenTag, "BR");
+            var rn = new Token(TokenType.Comment, "i'm the comment!");
+
+            var tokens = new[]
+                             {
+                                 br,
+                                 rn,
+                             };
+
+            List<HtmlNode> nodes = TreeBuilder.Build(tokens).ChildNodes.ToList();
+            Assert.Equal(2, nodes.Count);
+        }
     }
 }

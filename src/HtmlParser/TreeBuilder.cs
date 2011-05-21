@@ -45,12 +45,8 @@ namespace HtmlParser
                 switch (token.Type)
                 {
                     case TokenType.OpenTag:
-                        HtmlElementFlag elementFlag;
-                        var key = currentNode.Name ?? string.Empty;
-                        elementsFlags.TryGetValue(key.ToLower(), out elementFlag);
-                        if (elementFlag == HtmlElementFlag.Empty)
-                            currentNode = stack.Pop();
                         var node = new HtmlElementNode(token.Value);
+                        currentNode = PopCurrentNodeParentIfCurrentNodeIsEmptyTag(stack, currentNode);
                         currentNode.AppendChild(node);
                         stack.Push(currentNode);
                         currentNode = node;
@@ -66,9 +62,11 @@ namespace HtmlParser
                         currentAttribute.Value = token.Value;
                         break;
                     case TokenType.Text:
+                        currentNode = PopCurrentNodeParentIfCurrentNodeIsEmptyTag(stack, currentNode);
                         currentNode.AppendChild(new HtmlTextNode(token.Value));
                         break;
                     case TokenType.Comment:
+                        currentNode = PopCurrentNodeParentIfCurrentNodeIsEmptyTag(stack, currentNode);
                         currentNode.AppendChild(new HtmlCommentNode(token.Value));
                         break;
                     default:
@@ -76,6 +74,16 @@ namespace HtmlParser
                 }
             }
             return documentNode;
+        }
+
+        private static HtmlNode PopCurrentNodeParentIfCurrentNodeIsEmptyTag(Stack<HtmlNode> stack, HtmlNode currentNode)
+        {
+            HtmlElementFlag elementFlag;
+            string key = currentNode.Name ?? string.Empty;
+            elementsFlags.TryGetValue(key.ToLower(), out elementFlag);
+            if (elementFlag == HtmlElementFlag.Empty)
+                currentNode = stack.Pop();
+            return currentNode;
         }
     }
 }
