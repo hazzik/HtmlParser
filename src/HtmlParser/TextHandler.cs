@@ -40,6 +40,12 @@
 			}
 			if (state == State.WaitForMinus)
 			{
+                if (ch == '>')
+                {
+                    tokens.Add(context.SwitchState(TokenType.Comment, new CommentHandler()));
+                    tokens.Add(context.SwitchState(TokenType.Text, new TextHandler()));
+                    return true;
+                }
 				if (ch == '-')
 				{
 					state = State.WaitForSecondMinus;

@@ -427,7 +427,7 @@ namespace HtmlParser.Tests
         }
 
         [Fact]
-        public void DoesParseCommentWithMinusInside()
+        public void ParseCommentWithMinusInside()
         {
             const string html = "<!--head x-y- z-->";
 
@@ -438,7 +438,7 @@ namespace HtmlParser.Tests
         }
 
         [Fact]
-        public void DoesParseCommentWithDoubleMinusInside()
+        public void ParseCommentWithDoubleMinusInside()
         {
             const string html = "<!--head x--y-- z-->";
 
@@ -446,6 +446,45 @@ namespace HtmlParser.Tests
             Token token = tokens.First();
             Assert.Equal(TokenType.Comment, token.Type);
             Assert.Equal("head x--y-- z", token.Value);
+        }
+
+        [Fact]
+        public void ParseEmptyComment()
+        {
+            const string html = "<!>";
+
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
+            Token token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("", token.Value);
+        }
+
+        [Fact]
+        public void ParseEmptyCommentInsideText()
+        {
+            const string html = "a<!>b";
+
+            var tokens = new TokenParser().Parse(html).ToList();
+            Token a = tokens[0];
+            Assert.Equal(TokenType.Text, a.Type);
+            Assert.Equal("a", a.Value);
+            Token comment = tokens[1];
+            Assert.Equal(TokenType.Comment, comment.Type);
+            Assert.Equal("", comment.Value);
+            Token b = tokens[2];
+            Assert.Equal(TokenType.Text, b.Type);
+            Assert.Equal("b", b.Value);
+        }
+        
+        [Fact]
+        public void ParseEmptyComment2()
+        {
+            const string html = "<!---->";
+
+            IEnumerable<Token> tokens = new TokenParser().Parse(html);
+            Token token = tokens.First();
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.Equal("", token.Value);
         }
 
 		[Fact]

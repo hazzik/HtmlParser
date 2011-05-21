@@ -33,7 +33,7 @@ namespace HtmlParser
 			}
 
 			tokens.Add(SwitchState(TokenType.Text, new TextHandler()));
-			return tokens.Where(x => x.IsNotEmpty());
+		    return tokens.Where(x => x.IsNotEmpty() || x.Type == TokenType.Comment);
 		}
 	}
 }
